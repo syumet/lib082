@@ -1,6 +1,7 @@
 package ds;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
@@ -9,18 +10,36 @@ public class BinaryTree<E> extends AbstractTree<E> {
 	BinaryTree<E> left;
 	BinaryTree<E> right;
 	
-	public BinaryTree() {
-		// TODO
-		super();
+	public BinaryTree(E[] items) throws IllegalArgumentException {
+		if (items.length == 0)
+			throw new IllegalArgumentException("Attempted to creat an empty tree.");
+		BinaryTree<E> root = span(items, 1);
+		I = root.item();
+		left = root.getLeft();
+		right = root.getRight();
 	}
 		
+	protected BinaryTree(E item) {
+		I = item;
+	}
+
+	private BinaryTree<E> span(E[] items, int i) {
+		if (items[i-1] == null) return null;
+		BinaryTree<E> newTree = new BinaryTree<E>(items[i-1]);
+		if (i * 2 <= items.length)
+			newTree.setLeft(span(items, i*2));
+		if (i * 2 < items.length)
+			newTree.setRight(span(items, i*2+1));
+		return newTree;
+	}
+
 	public BinaryTree<E> getLeft() throws NoSuchElementException {
 		if (left == null)
 			throw new NoSuchElementException("Empty left child.");
 		return left;
 	}
 
-	public void setLeft(BinaryTree<E> t) {
+	protected void setLeft(BinaryTree<E> t) {
 		this.left = t;
 	}
 
@@ -30,7 +49,7 @@ public class BinaryTree<E> extends AbstractTree<E> {
 		return right;
 	}
 
-	public void setRight(BinaryTree<E> t) {
+	protected void setRight(BinaryTree<E> t) {
 		this.right = t;
 	}
 
@@ -41,7 +60,7 @@ public class BinaryTree<E> extends AbstractTree<E> {
 		return I;
 	}
 	
-	public void setItem(E item) {
+	protected void setItem(E item) {
 		this.I = item;
 	}	
 
@@ -52,16 +71,15 @@ public class BinaryTree<E> extends AbstractTree<E> {
 	
 	private final class TreeItr implements Iterator<E> {
 
-		Queue<E> treeItems;
+		LinkedList<E> treeItems;
 		Iterator<E> iter;
 		
 		public TreeItr() {
 			super();
-			// TODO Auto-generated constructor stub
+			treeItems = toListBFS();
 			iter = treeItems.iterator();
-			
 		}
-
+ 
 		@Override
 		public boolean hasNext() {
 			return iter.hasNext();
@@ -69,8 +87,7 @@ public class BinaryTree<E> extends AbstractTree<E> {
 
 		@Override
 		public E next() {
-			// TODO Auto-generated method stub
-			return null;
+			return iter.next();
 		}
 		
 	}
@@ -82,13 +99,27 @@ public class BinaryTree<E> extends AbstractTree<E> {
 		return (1 + lc + rc);
 	}
 
-	@Override
-	public boolean add(E e) {
-		// TODO Auto-generated method stub
-		return super.add(e);
+	protected LinkedList<E> toListBFS() {
+		
+		LinkedList<E> L = new LinkedList<>();
+		Queue<BinaryTree<E>> Q = new LinkedList<>();
+		
+		Q.add(this);
+		while (!Q.isEmpty()) {
+			BinaryTree<E> cur = Q.poll();
+			L.add(cur.item());
+			if (cur.left != null)
+				Q.add(cur.left);
+			if (cur.right != null)
+				Q.add(cur.right);
+		}
+		return L;
 	}
 
-
+	@Override
+	public Object[] toArray() {
+		return toListBFS().toArray();
+	}
 	
 	
 
