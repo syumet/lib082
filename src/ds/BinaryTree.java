@@ -1,15 +1,9 @@
 package ds;
 
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.NoSuchElementException;
-import java.util.Queue;
 
-public class BinaryTree<E> extends AbstractTree<E> {
+public class BinaryTree<E> extends AbstractBinaryTree<E> {
 
-	BinaryTree<E> left;
-	BinaryTree<E> right;
-	
 	public BinaryTree(E[] items) throws IllegalArgumentException {
 		if (items.length == 0)
 			throw new IllegalArgumentException("Attempted to creat an empty tree.");
@@ -19,10 +13,10 @@ public class BinaryTree<E> extends AbstractTree<E> {
 		right = root.getRight();
 	}
 		
-	protected BinaryTree(E item) {
+	public BinaryTree(E item) {
 		I = item;
 	}
-
+	
 	private BinaryTree<E> span(E[] items, int i) {
 		if (items[i-1] == null) return null;
 		BinaryTree<E> newTree = new BinaryTree<E>(items[i-1]);
@@ -32,90 +26,30 @@ public class BinaryTree<E> extends AbstractTree<E> {
 			newTree.setRight(span(items, i*2+1));
 		return newTree;
 	}
-
-	public BinaryTree<E> getLeft() throws NoSuchElementException {
-		if (left == null)
-			throw new NoSuchElementException("Empty left child.");
-		return left;
-	}
-
-	protected void setLeft(BinaryTree<E> t) {
-		this.left = t;
-	}
-
-	public BinaryTree<E> getRight() throws NoSuchElementException {
-		if (right == null)
-			throw new NoSuchElementException("Empty right child.");
-		return right;
-	}
-
-	protected void setRight(BinaryTree<E> t) {
-		this.right = t;
-	}
-
-	@Override
-	public E item() throws NoSuchElementException {
-		if (I == null)
-			throw new NoSuchElementException("Attempted to access an empty tree.");
-		return I;
-	}
-	
-	protected void setItem(E item) {
-		this.I = item;
-	}	
-
-	@Override
-	public Iterator<E> iterator() {
-		return new TreeItr();	
-	}
-	
-	private final class TreeItr implements Iterator<E> {
-
-		Queue<BinaryTree<E>> Q;
 		
-		public TreeItr() {
-			Q = new LinkedList<>();
-			Q.add(BinaryTree.this);
-		}
- 
-		@Override
-		public boolean hasNext() {
-			return (!Q.isEmpty());
-		}
-
-		@Override
-		public E next() {
-			BinaryTree<E> cur = Q.poll();
-			if (cur.left != null)
-				Q.add(cur.left);
-			if (cur.right != null)
-				Q.add(cur.right);
-			return cur.item();
-		}
+	@Override
+	public BinaryTree<E> getLeft() throws NoSuchElementException {
+		return (BinaryTree<E>) super.getLeft();
 	}
 
 	@Override
-	public int size() {
-		int lc = (left == null) ? 0 : left.size();
-		int rc = (right == null) ? 0 : right.size();
-		return (1 + lc + rc);
+	public void setLeft(AbstractBinaryTree<E> t) {
+		super.setLeft(t);
 	}
 
-	protected boolean isLeaf() {
-		return (left == null && right == null);
-	}
-	
 	@Override
-	public void clear() {
-		I = null;
-		if (left != null) {
-			left.clear();
-			left = null;
-		}
-		if (right != null) {
-			right.clear();
-			right = null;
-		}
+	public BinaryTree<E> getRight() throws NoSuchElementException {
+		return (BinaryTree<E>) super.getRight();
+	}
+
+	@Override
+	public void setRight(AbstractBinaryTree<E> t) {
+		super.setRight(t);
+	}
+
+	@Override
+	public void setItem(E item) { 
+		super.setItem(item);
 	}
 
 	public static void main(String[] args) {
@@ -136,7 +70,7 @@ public class BinaryTree<E> extends AbstractTree<E> {
 		try {
 			T.retainAll(T1);
 		} catch (UnsupportedOperationException e) {
-			System.out.println("Exception catched. This is an unmodifiable collection.");
+			System.out.println("Exception catched.");
 		}
 		
 		T.clear();
