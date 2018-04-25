@@ -71,25 +71,27 @@ public class BinaryTree<E> extends AbstractTree<E> {
 	
 	private final class TreeItr implements Iterator<E> {
 
-		LinkedList<E> treeItems;
-		Iterator<E> iter;
+		Queue<BinaryTree<E>> Q;
 		
 		public TreeItr() {
-			super();
-			treeItems = toListBFS();
-			iter = treeItems.iterator();
+			Q = new LinkedList<>();
+			Q.add(BinaryTree.this);
 		}
  
 		@Override
 		public boolean hasNext() {
-			return iter.hasNext();
+			return (!Q.isEmpty());
 		}
 
 		@Override
 		public E next() {
-			return iter.next();
+			BinaryTree<E> cur = Q.poll();
+			if (cur.left != null)
+				Q.add(cur.left);
+			if (cur.right != null)
+				Q.add(cur.right);
+			return cur.item();
 		}
-		
 	}
 
 	@Override
@@ -99,28 +101,16 @@ public class BinaryTree<E> extends AbstractTree<E> {
 		return (1 + lc + rc);
 	}
 
-	protected LinkedList<E> toListBFS() {
-		
-		LinkedList<E> L = new LinkedList<>();
-		Queue<BinaryTree<E>> Q = new LinkedList<>();
-		
-		Q.add(this);
-		while (!Q.isEmpty()) {
-			BinaryTree<E> cur = Q.poll();
-			L.add(cur.item());
-			if (cur.left != null)
-				Q.add(cur.left);
-			if (cur.right != null)
-				Q.add(cur.right);
-		}
-		return L;
-	}
-
-	@Override
-	public Object[] toArray() {
-		return toListBFS().toArray();
+	protected boolean isLeaf() {
+		return (left == null && right == null);
 	}
 	
-	
+	public static void main(String[] args) {
+		Character[] words = {'A','B','C','D','E','F','G','H','I','J'};
+		BinaryTree<Character> T = new BinaryTree<>(words);
+		System.out.println(T.toString());
+		System.out.println(T.getLeft().toString());
+		T.clear(); // TODO
+	}
 
 }
