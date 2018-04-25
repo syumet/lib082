@@ -105,12 +105,41 @@ public class BinaryTree<E> extends AbstractTree<E> {
 		return (left == null && right == null);
 	}
 	
+	@Override
+	public void clear() {
+		I = null;
+		if (left != null) {
+			left.clear();
+			left = null;
+		}
+		if (right != null) {
+			right.clear();
+			right = null;
+		}
+	}
+
 	public static void main(String[] args) {
 		Character[] words = {'A','B','C','D','E','F','G','H','I','J'};
 		BinaryTree<Character> T = new BinaryTree<>(words);
 		System.out.println(T.toString());
 		System.out.println(T.getLeft().toString());
-		T.clear(); // TODO
+		for (Character item : T) {
+			System.out.print(T.contains(item) + "\t");
+		}
+		System.out.println();
+		
+		Character[] w1 = {'B','C','D','E','G','H','I'};
+		BinaryTree<Character> T1 = new BinaryTree<>(w1);
+		System.out.print(T.containsAll(T1) + "\t");
+		System.out.print(T.getLeft().containsAll(T1) + "\n");
+		
+		try {
+			T.retainAll(T1);
+		} catch (UnsupportedOperationException e) {
+			System.out.println("Exception catched. This is an unmodifiable collection.");
+		}
+		
+		T.clear();
 	}
 
 }
