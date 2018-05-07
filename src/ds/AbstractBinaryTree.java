@@ -3,7 +3,6 @@ package ds;
 import java.util.AbstractCollection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.NoSuchElementException;
 import java.util.Queue;
 
 public abstract class AbstractBinaryTree<E> extends AbstractCollection<E> implements Tree<E> {
@@ -12,36 +11,35 @@ public abstract class AbstractBinaryTree<E> extends AbstractCollection<E> implem
 	AbstractBinaryTree<E> left;
 	AbstractBinaryTree<E> right;
 
-	protected AbstractBinaryTree<E> getLeft() throws NoSuchElementException {
-		if (left == null)
-			throw new NoSuchElementException("Empty left child.");
-		return left;
-	}
-
-	protected void setLeft(AbstractBinaryTree<E> t) {
-		this.left = t;
-	}
-
-	protected AbstractBinaryTree<E> getRight() throws NoSuchElementException {
-		if (right == null)
-			throw new NoSuchElementException("Empty right child.");
-		return right;
-	}
-
-	protected void setRight(AbstractBinaryTree<E> t) {
-		this.right = t;
-	}
-
-	@Override
-	public E item() throws NoSuchElementException {
-		if (I == null)
-			throw new NoSuchElementException("Attempted to access an empty tree.");
-		return I;
-	}
-	
-	protected void setItem(E item) {
-		this.I = item;
-	}	
+//	protected AbstractBinaryTree<E> getLeft() throws NoSuchElementException {
+//		if (left == null)
+//			throw new NoSuchElementException("Empty left child.");
+//		return left;
+//	}
+//
+//	protected void setLeft(AbstractBinaryTree<E> t) {
+//		this.left = t;
+//	}
+//
+//	protected AbstractBinaryTree<E> getRight() throws NoSuchElementException {
+//		if (right == null)
+//			throw new NoSuchElementException("Empty right child.");
+//		return right;
+//	}
+//
+//	protected void setRight(AbstractBinaryTree<E> t) {
+//		this.right = t;
+//	}
+//
+//	public E getItem() throws NoSuchElementException {
+//		if (I == null)
+//			throw new NoSuchElementException("Attempted to access an empty tree.");
+//		return I;
+//	}
+//	
+//	protected void setItem(E item) {
+//		this.I = item;
+//	}	
 
 	@Override
 	public Iterator<E> iterator() {
@@ -69,15 +67,21 @@ public abstract class AbstractBinaryTree<E> extends AbstractCollection<E> implem
 				Q.add(cur.left);
 			if (cur.right != null)
 				Q.add(cur.right);
-			return cur.item();
+			return cur.I;
 		}
 	}
 
 	@Override
 	public int size() {
+		if (isEmpty()) return 0;
 		int lc = (left == null) ? 0 : left.size();
 		int rc = (right == null) ? 0 : right.size();
 		return (1 + lc + rc);
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return (I == null && left == null && right == null);
 	}
 
 	protected boolean isLeaf() {

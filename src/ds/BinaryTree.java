@@ -1,14 +1,12 @@
 package ds;
 
-import java.util.NoSuchElementException;
-
 public class BinaryTree<E> extends AbstractBinaryTree<E> {
 
 	public BinaryTree(E[] items) throws IllegalArgumentException {
 		if (items.length == 0)
 			throw new IllegalArgumentException("Attempted to creat an empty tree.");
 		BinaryTree<E> root = span(items, 1);
-		I = root.item();
+		I = root.getRootItem();
 		left = root.getLeft();
 		right = root.getRight();
 	}
@@ -27,29 +25,28 @@ public class BinaryTree<E> extends AbstractBinaryTree<E> {
 		return newTree;
 	}
 		
-	@Override
-	public BinaryTree<E> getLeft() throws NoSuchElementException {
-		return (BinaryTree<E>) super.getLeft();
+	public BinaryTree<E> getLeft() {
+		return (BinaryTree<E>) left;
 	}
 
-	@Override
 	public void setLeft(AbstractBinaryTree<E> t) {
-		super.setLeft(t);
+		left = t;
 	}
 
-	@Override
-	public BinaryTree<E> getRight() throws NoSuchElementException {
-		return (BinaryTree<E>) super.getRight();
+	public BinaryTree<E> getRight() {
+		return (BinaryTree<E>) right;
 	}
 
-	@Override
 	public void setRight(AbstractBinaryTree<E> t) {
-		super.setRight(t);
+		right = t;
 	}
 
-	@Override
-	public void setItem(E item) { 
-		super.setItem(item);
+	public void setRootItem(E item) { 
+		I = item;
+	}
+	
+	public E getRootItem() {
+		return I;
 	}
 
 	public static void main(String[] args) {
