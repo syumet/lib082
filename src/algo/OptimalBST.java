@@ -2,6 +2,8 @@ package algo;
 
 import java.text.DecimalFormat;
 
+import ds.BinaryTree;
+
 public class OptimalBST {
 	
 	final int n;
@@ -78,16 +80,16 @@ public class OptimalBST {
 		return s.toString();
 	}
 	
-/*	*//**
+	/**
 	 * 
 	 * @return the optimal binary search tree. 
-	 *//*
-	public LinkedSimpleTree280<Character> generate() {
+	 */
+	public BinaryTree<Character> generate() {
 		return generate(0, n-1);
 	}
 	
-	private LinkedSimpleTree280<Character> generate(int lt, int rt) {
-		LinkedSimpleTree280<Character> t = new LinkedSimpleTree280<>();
+	private BinaryTree<Character> generate(int lt, int rt) {
+		BinaryTree<Character> t = new BinaryTree<Character>(' ');
 		if (lt == rt) {
 			t.setRootItem(words[lt]);
 			return t;
@@ -95,22 +97,21 @@ public class OptimalBST {
 		int r = (int) cost[rt][lt];
 		t.setRootItem(words[r]);
 		if (r - 1 >= lt) {
-			LinkedSimpleTree280<Character> lc = generate(lt, r-1);
-			t.setRootLeftSubtree(lc);
+			BinaryTree<Character> lc = generate(lt, r-1);
+			t.setLeft(lc);
 		}
 		if (r + 1 <= rt) {
-			LinkedSimpleTree280<Character> rc = generate(r+1, rt);
-			t.setRootRightSubtree(rc);
+			BinaryTree<Character> rc = generate(r+1, rt);
+			t.setRight(rc);
 		}
 		return t;
-	}
-*/	
+	}	
 	
 	public static void main(String args[]) {
 		char[] words = {'A','B','C','D','E','F','G','H','I','J'};
 		double[] freq = {0.05,0.15,0.12,0.08,0.02,0.18,0.04,0.07,0.16,0.13};
 		OptimalBST C = new OptimalBST(words, freq);
 		System.out.print(C);
-//		System.out.print(C.generate().toStringByLevel());
+		System.out.print(C.generate());
 	}
 }
