@@ -10,7 +10,7 @@ public class Tree<E> {
 	 */
     public static <E> BinaryTree<E> invert(BinaryTree<E> root) {
     	
-        if(root == null) return null; 
+        if (root == null) return null; 
         
 		BinaryTree<E> left = root.getLeft();
 		BinaryTree<E> right = root.getRight();
@@ -18,6 +18,20 @@ public class Tree<E> {
 		root.setRight(invert(left));
 		
 		return root;
+    }
+    
+	/**
+	 * LeetCode Problem #100
+	 * See https://leetcode.com/problems/same-tree/description/ for details.
+	 */
+    public static <E> Boolean isSame(BinaryTree<E> p, BinaryTree<E> q) {
+    	
+    	if (p == null && q == null)
+    		return true;
+    	if (p == null || q == null || p.getRootItem() != q.getRootItem())
+    		return false;
+    	
+    	return (isSame(p.getLeft(), q.getLeft()) && isSame(p.getRight(), q.getRight()));
     }
     
     public static void main(String[] args) {
@@ -28,6 +42,19 @@ public class Tree<E> {
 		System.out.println(T.toString());
 		T = invert(T);
 		System.out.println(T.toString());
+		
+		// test for isSame()
+		BinaryTree<Character> T1 = new BinaryTree<>(words);
+		System.out.print(isSame(T, T1) + "\t");
+		
+		T1 = invert(T1);
+		// System.out.println(T1.toString());
+		System.out.print(isSame(T, T1) + "\t");
+		
+    	Character[] w1 = {'A','B','C','D','E','G','H','I','J'};
+		T1 = new BinaryTree<>(w1);
+		System.out.println(isSame(T, T1));
+		
 	}
     
 }
