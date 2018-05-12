@@ -1,5 +1,8 @@
 package algo;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import ds.BinaryTree;
 
 public class Tree<E> {
@@ -43,6 +46,37 @@ public class Tree<E> {
     	return 1 + Integer.max(maxDepth(root.getLeft()), maxDepth(root.getRight()) );
 	}
     
+	/**
+	 * LeetCode Problem #111
+	 * See https://leetcode.com/problems/minimum-depth-of-binary-tree/description/ for details.
+	 */
+    public static <E> int minDepth(BinaryTree<E> root) {
+    	
+    	if (root == null) return 0;
+    	
+    	Queue<BinaryTree<E>> T = new LinkedList<>();   	
+    	Queue<Integer> D = new LinkedList<>();	
+    	
+    	T.add(root);
+    	D.add(1);
+    	BinaryTree<E> cur = T.poll();
+    	int dep = D.poll();
+    	
+    	while (cur.getLeft() != null || cur.getRight() != null) {
+			if (cur.getLeft() != null) {
+				T.add(cur.getLeft());
+				D.add(dep + 1);
+			}
+			if (cur.getRight() != null) {
+				T.add(cur.getRight());
+				D.add(dep + 1);
+			}	
+			cur = T.poll();
+			dep = D.poll();
+		}
+    	return dep;
+	}
+    
     public static void main(String[] args) {
 		
     	// test for invert()
@@ -64,8 +98,10 @@ public class Tree<E> {
 		T1 = new BinaryTree<>(w1);
 		System.out.print(isSame(T, T1) + "\t");
 		
-		// test for maxDepth()
-		System.out.println(maxDepth(T));
+		// test for maxDepth(), minDepth()
+		System.out.print(maxDepth(T) + "\t");
+		System.out.println(minDepth(T));
+		
 	}
     
 }
