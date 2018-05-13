@@ -1,59 +1,128 @@
 package ds;
 
-public class BinaryTree<E> extends AbstractBinaryTree<E> {
+import java.util.AbstractCollection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class BinaryTree<E> extends AbstractCollection<E> implements Tree<E> {
+
+	protected E val;
+	protected BinaryTree<E> left;
+	protected BinaryTree<E> right;
 
 	public BinaryTree(E[] items) throws IllegalArgumentException {
 		if (items.length == 0)
 			throw new IllegalArgumentException("Attempted to creat an empty tree.");
 		BinaryTree<E> root = span(items, 1);
-		I = root.getRootItem();
-		left = root.getLeft();
-		right = root.getRight();
+		val = root.val;
+		left = root.left;
+		right = root.right;
 	}
 		
 	public BinaryTree(E item) {
-		I = item;
+		val = item;
 	}
 	
 	private BinaryTree<E> span(E[] items, int i) {
 		if (items[i-1] == null) return null;
 		BinaryTree<E> newTree = new BinaryTree<E>(items[i-1]);
 		if (i * 2 <= items.length)
-			newTree.setLeft(span(items, i*2));
+			newTree.left = span(items, i*2);
 		if (i * 2 < items.length)
-			newTree.setRight(span(items, i*2+1));
+			newTree.right = span(items, i*2+1);
 		return newTree;
-	}
-		
-	public BinaryTree<E> getLeft() {
-		return (BinaryTree<E>) left;
+	}	
+
+	public E getRootItem() {
+		return val;
 	}
 
-	public void setLeft(AbstractBinaryTree<E> t) {
-		left = t;
+	public void setRootItem(E val) {
+		this.val = val;
+	}
+
+	public BinaryTree<E> getLeft() {
+		return left;
+	}
+
+	public void setLeft(BinaryTree<E> left) {
+		this.left = left;
 	}
 
 	public BinaryTree<E> getRight() {
-		return (BinaryTree<E>) right;
+		return right;
 	}
 
-	public void setRight(AbstractBinaryTree<E> t) {
-		right = t;
+	public void setRight(BinaryTree<E> right) {
+		this.right = right;
 	}
 
-	public void setRootItem(E item) { 
-		I = item;
+	@Override
+	public Iterator<E> iterator() {
+		return new TreeItr();	
 	}
 	
-	public E getRootItem() {
-		return I;
+	private final class TreeItr implements Iterator<E> {
+
+		Queue<BinaryTree<E>> Q;
+		
+		public TreeItr() {
+			Q = new LinkedList<>();
+			Q.add(BinaryTree.this);
+		}
+ 
+		@Override
+		public boolean hasNext() {
+			return (!Q.isEmpty());
+		}
+
+		@Override
+		public E next() {
+			BinaryTree<E> cur = Q.poll();
+			if (cur.left != null)
+				Q.add(cur.left);
+			if (cur.right != null)
+				Q.add(cur.right);
+			return cur.val;
+		}
 	}
 
+	@Override
+	public int size() {
+		if (isEmpty()) return 0;
+		int lc = (left == null) ? 0 : left.size();
+		int rc = (right == null) ? 0 : right.size();
+		return (1 + lc + rc);
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return (val == null && left == null && right == null);
+	}
+
+	protected boolean isLeaf() {
+		return (left == null && right == null);
+	}
+	
+	@Override
+	public void clear() {
+		val = null;
+		if (left != null) {
+			left.clear();
+			left = null;
+		}
+		if (right != null) {
+			right.clear();
+			right = null;
+		}
+	}
+	
 	public static void main(String[] args) {
 		Character[] words = {'A','B','C','D','E','F','G','H','I','J'};
 		BinaryTree<Character> T = new BinaryTree<>(words);
 		System.out.println(T.toString());
-		System.out.println(T.getLeft().toString());
+		System.out.println(T.left.toString());
 		for (Character item : T) {
 			System.out.print(T.contains(item) + "\t");
 		}
@@ -62,7 +131,7 @@ public class BinaryTree<E> extends AbstractBinaryTree<E> {
 		Character[] w1 = {'B','C','D','E','G','H','I'};
 		BinaryTree<Character> T1 = new BinaryTree<>(w1);
 		System.out.print(T.containsAll(T1) + "\t");
-		System.out.print(T.getLeft().containsAll(T1) + "\n");
+		System.out.print(T.left.containsAll(T1) + "\n");
 		
 		try {
 			T.retainAll(T1);
