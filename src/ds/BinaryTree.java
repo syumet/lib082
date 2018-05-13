@@ -11,6 +11,8 @@ public class BinaryTree<E> extends AbstractCollection<E> implements Tree<E> {
 	protected BinaryTree<E> left;
 	protected BinaryTree<E> right;
 
+	public BinaryTree() {}
+	
 	public BinaryTree(E[] items) throws IllegalArgumentException {
 		if (items.length == 0)
 			throw new IllegalArgumentException("Attempted to creat an empty tree.");
@@ -19,14 +21,11 @@ public class BinaryTree<E> extends AbstractCollection<E> implements Tree<E> {
 		left = root.left;
 		right = root.right;
 	}
-		
-	public BinaryTree(E item) {
-		val = item;
-	}
 	
 	private BinaryTree<E> span(E[] items, int i) {
 		if (items[i-1] == null) return null;
-		BinaryTree<E> newTree = new BinaryTree<E>(items[i-1]);
+		BinaryTree<E> newTree = new BinaryTree<E>();
+		newTree.val = items[i-1];
 		if (i * 2 <= items.length)
 			newTree.left = span(items, i*2);
 		if (i * 2 < items.length)

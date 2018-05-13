@@ -89,7 +89,7 @@ public class OptimalBST {
 	}
 	
 	private BinaryTree<Character> generate(int lt, int rt) {
-		BinaryTree<Character> t = new BinaryTree<Character>(' ');
+		BinaryTree<Character> t = new BinaryTree<Character>();
 		if (lt == rt) {
 			t.setRootItem(words[lt]);
 			return t;
