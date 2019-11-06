@@ -124,14 +124,37 @@ public class BinaryTree<E> extends AbstractCollection<E> implements Tree<E> {
 	 * LeetCode Problem #226
 	 */
     public void invert() {
-		if (left != null)
-			left.invert();
-		if (right != null)
-			right.invert();
+		if (this.left != null)
+			this.left.invert();
+		if (this.right != null)
+			this.right.invert();
 		
 		BinaryTree<E> tmp = this.left;
 		this.left = this.right;
 		this.right = tmp;
+    }
+    
+	/**
+	 * LeetCode Problem #100
+	 */
+    public Boolean equals(BinaryTree<E> t) {
+    	
+    	if (t == null || t.val != this.val) 
+    		return false;
+
+    	boolean leq = true, req = true;
+    	
+		if (this.left != null)
+			leq = this.left.equals(t.left);
+		else if (t.left != null)
+			return false;
+		
+		if (this.right != null)
+			req = this.right.equals(t.right);
+		else if (t.left != null)
+			return false;
+    	
+    	return leq && req;
     }
 	
 	public static void main(String[] args) {

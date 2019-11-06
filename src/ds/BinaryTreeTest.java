@@ -130,7 +130,19 @@ public class BinaryTreeTest {
 	 */
 	@Test
 	public void testInvert() {
-		fail("Not yet implemented"); // TODO
+    	Character[] words = {'A','B','C','D','E','F','G','H','I','J'};
+		BinaryTree<Character> T = new BinaryTree<>(words);
+		System.out.println(T.toString());
+		T.invert();;
+		System.out.println(T.toString());
+	}
+
+	/**
+	 * Test method for {@link ds.BinaryTree#equals()}.
+	 */
+	@Test
+	public void testEquals() {
+    	fail(); // TODO
 	}
 
 }
