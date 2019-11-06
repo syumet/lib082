@@ -13,9 +13,12 @@ public class BinaryTree<E> extends AbstractCollection<E> implements Tree<E> {
 
 	public BinaryTree() {}
 	
-	public BinaryTree(E[] items) throws IllegalArgumentException {
-		if (items.length == 0)
-			throw new IllegalArgumentException("Attempted to creat an empty tree.");
+	public BinaryTree(E val) {
+		this.val = val;
+	}
+	
+	public BinaryTree(E[] items) {
+		if (items.length == 0) return;
 		BinaryTree<E> root = span(items, 1);
 		val = root.val;
 		left = root.left;
@@ -101,7 +104,7 @@ public class BinaryTree<E> extends AbstractCollection<E> implements Tree<E> {
 	}
 
 	protected boolean isLeaf() {
-		return (left == null && right == null);
+		return (val != null && left == null && right == null);
 	}
 	
 	@Override
@@ -117,28 +120,22 @@ public class BinaryTree<E> extends AbstractCollection<E> implements Tree<E> {
 		}
 	}
 	
+	/**
+	 * LeetCode Problem #226
+	 */
+    public void invert() {
+		if (left != null)
+			left.invert();
+		if (right != null)
+			right.invert();
+		
+		BinaryTree<E> tmp = this.left;
+		this.left = this.right;
+		this.right = tmp;
+    }
+	
 	public static void main(String[] args) {
-		Character[] words = {'A','B','C','D','E','F','G','H','I','J'};
-		BinaryTree<Character> T = new BinaryTree<>(words);
-		System.out.println(T.toString());
-		System.out.println(T.left.toString());
-		for (Character item : T) {
-			System.out.print(T.contains(item) + "\t");
-		}
-		System.out.println();
-		
-		Character[] w1 = {'B','C','D','E','G','H','I'};
-		BinaryTree<Character> T1 = new BinaryTree<>(w1);
-		System.out.print(T.containsAll(T1) + "\t");
-		System.out.print(T.left.containsAll(T1) + "\n");
-		
-		try {
-			T.retainAll(T1);
-		} catch (UnsupportedOperationException e) {
-			System.out.println("Exception catched.");
-		}
-		
-		T.clear();
+
 	}
 
 }
