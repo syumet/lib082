@@ -1,0 +1,260 @@
+package ds;
+
+public class NDPoint implements Comparable<NDPoint> {
+	
+	private Double coords[];
+	private int dim;
+	
+	/**
+	 * Create a new N-dimensional point at the origin (0,0,..., 0).
+	 * 
+	 * @param dim Dimensionality of the point.
+	 */
+	public NDPoint(int dim) {
+		if( dim < 1 ) 
+			throw new IllegalArgumentException("NDPoint: dimension of point must be at least 1.");
+		this.dim = dim;
+		coords = new Double[dim];
+		for (int i = 0; i < dim; i++)
+			coords[i] = 0.0;
+	}
+	
+	/**
+	 * Create a point from a coordinate in an array of Double.  The dimensionality of 
+	 * the point is equal to the length of pt.
+	 * 
+	 * @param pt Coordinates of the new point.  
+	 */
+	public NDPoint(Double pt[]) {
+		this.dim = pt.length;
+		if( this.dim < 1 ) 
+			throw new IllegalArgumentException("NDPoint: dimension of point must be at least 1.");
+		coords = new Double[this.dim];
+		this.copyArray(pt);
+	}
+	
+	/**
+	 * Create a point from a coordinate in array of double.  The dimensionality of
+	 * the point is equal to the length of pt.
+	 * 
+	 * @param pt Coordinates of the new point.
+	 */
+	public NDPoint(double pt[]) {
+		this.dim = pt.length;
+		if( this.dim < 1 ) 
+			throw new IllegalArgumentException("NDPoint: dimension of point must be at least 1.");
+		coords = new Double[this.dim];
+		this.copyArray(pt);
+	}
+	
+	/**
+	 * Use the coordinates in the given array for this point.
+	 * @param pt New coordinates for this point.
+	 * @throws IllegalArgumentException if the length of pt is not equal to 
+	 * the dimensionality of this N-dimensional point.
+	 */
+	private void copyArray(Double pt[]) {
+		if( this.dim() != pt.length ) {
+			throw new IllegalArgumentException(
+				"Array length must equal point dimensionality (" + this.dim + ")");			
+		}
+		for(int i=0; i < this.dim; i++) {
+			coords[i] = pt[i];
+		}		
+	}
+
+	/**
+	 * Use the coordinates in the given array for this point.
+	 * @param pt New coordinates for this point.
+	 * @throws IllegalArgumentException if the length of pt is not equal to 
+	 * the dimensionality of this N-dimensional point.
+	 */
+	private void copyArray(double pt[]) {
+		if( this.dim() != pt.length ) {
+			throw new IllegalArgumentException(
+				"Array length must equal point dimensionality (" + this.dim + ")");			
+		}
+		for(int i=0; i < this.dim; i++) {
+			coords[i] = pt[i];
+		}		
+	}
+	
+	/**
+	 * Get the dimensionality of the point.
+	 * @return The dimensionality of the point.
+	 */
+	public int dim() {return this.dim;}
+	
+	/**
+	 * Set the coordinates of this point.
+	 * 
+	 * @param pt The point to store represented as an array of double.
+	 * @throws IllegalArgumentException if length of pt is less than 1.
+	 */
+	void setPoint(Double pt[]) {
+		if( this.dim != pt.length) { 
+			this.dim = pt.length;
+			if( this.dim < 1 ) 
+				throw new IllegalArgumentException("NDPoint: dimension of point must be at least 1.");
+			coords = new Double[this.dim];
+		}
+		this.copyArray(pt);
+	}
+	
+	/**
+	 * Obtain the i-th coordinate of the point.
+	 * @param i Desired coordinate of the point.
+	 * @return The value of the i-th coordinate of the point.
+	 * @throws IllegalArgumentException if i is not a valid dimension index for this n-dimensional point (i.e. if i >= n)
+	 */
+	public double at(int i) {
+		if( i >= this.dim ) {
+			throw new IllegalArgumentException("Requested coordinate index exceeds point dimensionality.");
+		}
+		return coords[i];
+	}
+	
+	@Override
+	public String toString() {
+		String out = "(" + coords[0];
+		for(int i=1; i < this.dim; i++) {
+			out += ", " + coords[i];
+			
+		}
+		out += ")";
+		return out;
+	}
+	
+	/**
+	 * Compares the i-th coordinate of two NDPoint objects.
+	 * @param i Index of the coordinate to compare.
+	 * @param other The point to which to compare this point.
+	 * @return -1 if the i-th coordinate of this point is smaller than that of 'other';
+	 *         0 if the i-th coordinate of this point and 'other' are equal; or
+	 *         1 if the i-th coordinate of this point is greater than that of 'other'.
+	 * @throws IllegalArgumentException if i is not less than this point's dimensionality OR
+	 * this.dim() does not equal other.dim().
+	 */
+	public int compareByDim(int i, NDPoint other) {
+		if( other.dim() != this.dim ) {
+			throw new IllegalArgumentException(
+				"NDPoint: comparing two points of different dimension");
+		}
+		if( i >= this.dim ) {
+			throw new IllegalArgumentException(
+				"NDPoint: comparing dimension: " + i + ", but point only has dimension " + this.dim);
+		}
+				
+		return coords[i].compareTo(other.coords[i]);
+	}
+
+	/**
+	 * Compares this point to 'o' based on the first non-equal dimension (i.e. lexographic ordering).
+	 * @param y The point to which this point is to be compared.
+	 */
+	@Override
+	public int compareTo(NDPoint y) {
+		if( this.dim != y.dim ) 
+			throw new IllegalArgumentException("NDPoint: comparing two points of different dimension");
+		
+		for(int i=0; i < this.dim; i++) {
+			if( this.coords[i].compareTo(y.coords[i]) != 0 ) {
+				return this.coords[i].compareTo(y.coords[i]);
+			}
+		}
+		
+		return 0;
+	}
+	
+	double l1Dis(NDPoint y) {
+ 		if( this.dim != y.dim ) 
+			throw new IllegalArgumentException("NDPoint: comparing two points of different dimension");
+		double d = 0;
+		for (int i = 0; i < dim; i++)
+			d += Math.abs(this.at(i) - y.at(i));
+		return d;	
+	}
+	
+	double l2Dis(NDPoint y) {
+		if( this.dim != y.dim ) 
+			throw new IllegalArgumentException("NDPoint: comparing two points of different dimension");
+		double d2 = 0;
+		for (int i = 0; i < dim; i++)
+			d2 += Math.pow(this.at(i) - y.at(i), 2);
+		return Math.sqrt(d2);	
+	}
+	
+	/**
+	 * @param p
+	 * @return p-norm of this vector (NDPoint)
+	 */
+	public double norm(int p) {
+		if (p == 1)
+			return l1Dis(new NDPoint(dim));	
+		else if (p == 2)
+			return l2Dis(new NDPoint(dim));
+		else
+			throw new IllegalArgumentException(p + "-norm not yet supported");		
+	}
+	
+	public static void main(String args[]) {
+		// test first constructor, test dim()
+		NDPoint p = new NDPoint(5);
+		if( p.dim() != 5) System.out.println("Newly created point should have dimension 5, but has dimension " + p.dim());
+		
+		// test second constructor, test dim()
+		Double pt3d[] = {1.0, 2.0, 3.0};
+		p = new NDPoint(pt3d);
+		if( p.dim() != 3) System.out.println("Newly created point should have dimension 3, but has dimension " + p.dim());
+		if( p.at(0) != 1.0 || p.at(1) != 2.0 || p.at(2) != 3.0 )
+			System.out.println("Point should be (1.0, 2.0, 3.0) but it is: " + p);
+		
+		// test setPoint() and idx()
+		Double newpt3d[] = {3.0, 2.0, 1.0};
+		p.setPoint(newpt3d);
+		if( p.at(0) != 3.0 || p.at(1) != 2.0 || p.at(2) != 1.0 )
+			System.out.println("Point should be (3.0, 2.0, 1.0) but it is: " + p);
+		
+		// test toString()
+		String ptAsString = p.toString();
+		if( ptAsString.compareTo("(3.0, 2.0, 1.0)") != 0 ) 
+			System.out.println("Sting representation of point should be \"(3.0, 2.0, 1.0)\" but it is: \"" + ptAsString + "\"");
+		
+		// test compareTo() when the first coordinate is different
+		NDPoint q = new NDPoint(pt3d);
+		if( p.compareTo(p) != 0 )
+			System.out.println("The point is not equal to itself!");
+		if( p.compareTo(q) != 1 ) 
+			System.out.println("Point p should be greater than point q, but it isn't.");
+		if( q.compareTo(p) != -1 ) 
+			System.out.println("Point q should be less than point p, but it isn't.");
+		
+		// test compareTo() when the third coordinate is different
+		Double anotherPoint[] = {1.0, 2.0, 4.0};
+		p.setPoint(anotherPoint);
+		if( p.compareTo(q) != 1 )
+			System.out.println("Point p should be greater than point q, but it isn't.");
+		if( q.compareTo(p) != -1 ) 
+			System.out.println("Point q should be less than point p, but it isn't.");
+		
+		// test compareByDim()
+		if( p.compareByDim(1,  q) != 0 ) 
+			System.out.println("Coordinate 0 of p and q should be equal but they are reportedly not.");
+		if( p.compareByDim(1,  q) != 0 ) 
+			System.out.println("Coordinate 1 of p and q should be equal but they are reportedly not.");
+		if( p.compareByDim(2,  q) != 1 ) 
+			System.out.println("Coordinate 2 of p should be larger than coordinate 2 of q, but it is reportedly not.");
+		
+		// test norm and distance
+		System.out.println(p);
+		System.out.println(p.norm(1));
+		System.out.println(p.norm(2));
+		System.out.println(q);
+		System.out.println(q.norm(2));
+		System.out.println(q.l1Dis(p));
+		System.out.println(q.l2Dis(p));
+		
+		System.out.println("Unit test complete.");
+	}
+	
+}
