@@ -121,7 +121,7 @@ public class BinaryTree<E> extends AbstractCollection<E> implements Tree<E> {
 	}
 	
 	/**
-	 * LeetCode Problem #226
+	 * @see LeetCode Problem #226
 	 */
     public void invert() {
 		if (this.left != null)
@@ -135,7 +135,7 @@ public class BinaryTree<E> extends AbstractCollection<E> implements Tree<E> {
     }
     
 	/**
-	 * LeetCode Problem #100
+	 * @see LeetCode Problem #100
 	 */
     public Boolean equals(BinaryTree<E> t) {
     	
@@ -156,6 +156,51 @@ public class BinaryTree<E> extends AbstractCollection<E> implements Tree<E> {
     	
     	return leq && req;
     }
+    
+	/**
+	 * @see LeetCode Problem #104
+	 */
+    public int maxDepth() {
+    	if (this.isEmpty())
+    		return 0;
+    	
+    	int leftDepth = 0, rightDepth = 0;
+    	if (this.left != null)
+    		leftDepth = this.left.maxDepth();
+    	if (this.right != null)
+    		rightDepth = this.right.maxDepth();
+    	return 1 + Integer.max(leftDepth, rightDepth);
+	}
+    
+	/**
+	 * @see LeetCode Problem #111
+	 */
+    public int minDepth() {
+    	
+    	if (this.isEmpty()) return 0;
+    	
+    	Queue<BinaryTree<E>> bfs = new LinkedList<>();   	
+    	Queue<Integer> depth = new LinkedList<>();	
+    	
+    	bfs.add(this);
+    	depth.add(1);
+    	BinaryTree<E> cur = bfs.poll();
+    	int dep = depth.poll();
+    	
+    	while (!cur.isLeaf()) {
+			if (cur.left != null) {
+				bfs.add(cur.left);
+				depth.add(dep + 1);
+			}
+			if (cur.right != null) {
+				bfs.add(cur.right);
+				depth.add(dep + 1);
+			}	
+			cur = bfs.poll();
+			dep = depth.poll();
+		}
+    	return dep;
+	}
 	
 	public static void main(String[] args) {
 
