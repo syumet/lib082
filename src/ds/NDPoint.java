@@ -11,7 +11,7 @@ public class NDPoint implements Comparable<NDPoint> {
 	 * @param dim Dimensionality of the point.
 	 */
 	public NDPoint(int dim) {
-		if( dim < 1 ) 
+		if (dim < 1) 
 			throw new IllegalArgumentException("NDPoint: dimension of point must be at least 1.");
 		this.dim = dim;
 		coords = new Double[dim];
@@ -27,7 +27,7 @@ public class NDPoint implements Comparable<NDPoint> {
 	 */
 	public NDPoint(Double pt[]) {
 		this.dim = pt.length;
-		if( this.dim < 1 ) 
+		if (this.dim < 1) 
 			throw new IllegalArgumentException("NDPoint: dimension of point must be at least 1.");
 		coords = new Double[this.dim];
 		this.copyArray(pt);
@@ -41,7 +41,7 @@ public class NDPoint implements Comparable<NDPoint> {
 	 */
 	public NDPoint(double pt[]) {
 		this.dim = pt.length;
-		if( this.dim < 1 ) 
+		if (this.dim < 1) 
 			throw new IllegalArgumentException("NDPoint: dimension of point must be at least 1.");
 		coords = new Double[this.dim];
 		this.copyArray(pt);
@@ -54,11 +54,11 @@ public class NDPoint implements Comparable<NDPoint> {
 	 * the dimensionality of this N-dimensional point.
 	 */
 	private void copyArray(Double pt[]) {
-		if( this.dim() != pt.length ) {
+		if (this.dim() != pt.length) {
 			throw new IllegalArgumentException(
 				"Array length must equal point dimensionality (" + this.dim + ")");			
 		}
-		for(int i=0; i < this.dim; i++) {
+		for(int i = 0; i < this.dim; i++) {
 			coords[i] = pt[i];
 		}		
 	}
@@ -70,11 +70,11 @@ public class NDPoint implements Comparable<NDPoint> {
 	 * the dimensionality of this N-dimensional point.
 	 */
 	private void copyArray(double pt[]) {
-		if( this.dim() != pt.length ) {
+		if (this.dim() != pt.length) {
 			throw new IllegalArgumentException(
 				"Array length must equal point dimensionality (" + this.dim + ")");			
 		}
-		for(int i=0; i < this.dim; i++) {
+		for (int i = 0; i < this.dim; i++) {
 			coords[i] = pt[i];
 		}		
 	}
@@ -92,10 +92,12 @@ public class NDPoint implements Comparable<NDPoint> {
 	 * @throws IllegalArgumentException if length of pt is less than 1.
 	 */
 	void setPoint(Double pt[]) {
-		if( this.dim != pt.length) { 
+		if (this.dim != pt.length) { 
+			if (pt.length < 1) {
+				throw new IllegalArgumentException(
+					"NDPoint: dimension of point must be at least 1.");
+			}
 			this.dim = pt.length;
-			if( this.dim < 1 ) 
-				throw new IllegalArgumentException("NDPoint: dimension of point must be at least 1.");
 			coords = new Double[this.dim];
 		}
 		this.copyArray(pt);
@@ -108,7 +110,7 @@ public class NDPoint implements Comparable<NDPoint> {
 	 * @throws IllegalArgumentException if i is not a valid dimension index for this n-dimensional point (i.e. if i >= n)
 	 */
 	public double at(int i) {
-		if( i >= this.dim ) {
+		if (i >= this.dim) {
 			throw new IllegalArgumentException("Requested coordinate index exceeds point dimensionality.");
 		}
 		return coords[i];
@@ -117,9 +119,8 @@ public class NDPoint implements Comparable<NDPoint> {
 	@Override
 	public String toString() {
 		String out = "(" + coords[0];
-		for(int i=1; i < this.dim; i++) {
+		for (int i = 1; i < this.dim; i++) {
 			out += ", " + coords[i];
-			
 		}
 		out += ")";
 		return out;
@@ -136,15 +137,14 @@ public class NDPoint implements Comparable<NDPoint> {
 	 * this.dim() does not equal other.dim().
 	 */
 	public int compareByDim(int i, NDPoint other) {
-		if( other.dim() != this.dim ) {
+		if (other.dim() != this.dim) {
 			throw new IllegalArgumentException(
 				"NDPoint: comparing two points of different dimension");
 		}
-		if( i >= this.dim ) {
+		if (i >= this.dim) {
 			throw new IllegalArgumentException(
 				"NDPoint: comparing dimension: " + i + ", but point only has dimension " + this.dim);
 		}
-				
 		return coords[i].compareTo(other.coords[i]);
 	}
 
@@ -154,19 +154,17 @@ public class NDPoint implements Comparable<NDPoint> {
 	 */
 	@Override
 	public int compareTo(NDPoint y) {
-		if( this.dim != y.dim ) 
+		if (this.dim != y.dim) 
 			throw new IllegalArgumentException("NDPoint: comparing two points of different dimension");
-		
-		for(int i=0; i < this.dim; i++) {
+		for (int i = 0; i < this.dim; i++) {
 			if( this.coords[i].compareTo(y.coords[i]) != 0 ) {
 				return this.coords[i].compareTo(y.coords[i]);
 			}
 		}
-		
 		return 0;
 	}
 	
-	double l1Dis(NDPoint y) {
+	double distanceL1(NDPoint y) {
  		if( this.dim != y.dim ) 
 			throw new IllegalArgumentException("NDPoint: comparing two points of different dimension");
 		double d = 0;
@@ -175,7 +173,7 @@ public class NDPoint implements Comparable<NDPoint> {
 		return d;	
 	}
 	
-	double l2Dis(NDPoint y) {
+	double distanceL2(NDPoint y) {
 		if( this.dim != y.dim ) 
 			throw new IllegalArgumentException("NDPoint: comparing two points of different dimension");
 		double d2 = 0;
@@ -190,71 +188,14 @@ public class NDPoint implements Comparable<NDPoint> {
 	 */
 	public double norm(int p) {
 		if (p == 1)
-			return l1Dis(new NDPoint(dim));	
+			return distanceL1(new NDPoint(dim));	
 		else if (p == 2)
-			return l2Dis(new NDPoint(dim));
+			return distanceL2(new NDPoint(dim));
 		else
 			throw new IllegalArgumentException(p + "-norm not yet supported");		
 	}
 	
 	public static void main(String args[]) {
-		// test first constructor, test dim()
-		NDPoint p = new NDPoint(5);
-		if( p.dim() != 5) System.out.println("Newly created point should have dimension 5, but has dimension " + p.dim());
-		
-		// test second constructor, test dim()
-		Double pt3d[] = {1.0, 2.0, 3.0};
-		p = new NDPoint(pt3d);
-		if( p.dim() != 3) System.out.println("Newly created point should have dimension 3, but has dimension " + p.dim());
-		if( p.at(0) != 1.0 || p.at(1) != 2.0 || p.at(2) != 3.0 )
-			System.out.println("Point should be (1.0, 2.0, 3.0) but it is: " + p);
-		
-		// test setPoint() and idx()
-		Double newpt3d[] = {3.0, 2.0, 1.0};
-		p.setPoint(newpt3d);
-		if( p.at(0) != 3.0 || p.at(1) != 2.0 || p.at(2) != 1.0 )
-			System.out.println("Point should be (3.0, 2.0, 1.0) but it is: " + p);
-		
-		// test toString()
-		String ptAsString = p.toString();
-		if( ptAsString.compareTo("(3.0, 2.0, 1.0)") != 0 ) 
-			System.out.println("Sting representation of point should be \"(3.0, 2.0, 1.0)\" but it is: \"" + ptAsString + "\"");
-		
-		// test compareTo() when the first coordinate is different
-		NDPoint q = new NDPoint(pt3d);
-		if( p.compareTo(p) != 0 )
-			System.out.println("The point is not equal to itself!");
-		if( p.compareTo(q) != 1 ) 
-			System.out.println("Point p should be greater than point q, but it isn't.");
-		if( q.compareTo(p) != -1 ) 
-			System.out.println("Point q should be less than point p, but it isn't.");
-		
-		// test compareTo() when the third coordinate is different
-		Double anotherPoint[] = {1.0, 2.0, 4.0};
-		p.setPoint(anotherPoint);
-		if( p.compareTo(q) != 1 )
-			System.out.println("Point p should be greater than point q, but it isn't.");
-		if( q.compareTo(p) != -1 ) 
-			System.out.println("Point q should be less than point p, but it isn't.");
-		
-		// test compareByDim()
-		if( p.compareByDim(1,  q) != 0 ) 
-			System.out.println("Coordinate 0 of p and q should be equal but they are reportedly not.");
-		if( p.compareByDim(1,  q) != 0 ) 
-			System.out.println("Coordinate 1 of p and q should be equal but they are reportedly not.");
-		if( p.compareByDim(2,  q) != 1 ) 
-			System.out.println("Coordinate 2 of p should be larger than coordinate 2 of q, but it is reportedly not.");
-		
-		// test norm and distance
-		System.out.println(p);
-		System.out.println(p.norm(1));
-		System.out.println(p.norm(2));
-		System.out.println(q);
-		System.out.println(q.norm(2));
-		System.out.println(q.l1Dis(p));
-		System.out.println(q.l2Dis(p));
-		
-		System.out.println("Unit test complete.");
 	}
 	
 }
