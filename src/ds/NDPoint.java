@@ -1,5 +1,8 @@
 package ds;
 
+/**
+ * N-Dimensional Point 
+ */
 public class NDPoint implements Comparable<NDPoint> {
 	
 	private Double coords[];
@@ -84,6 +87,12 @@ public class NDPoint implements Comparable<NDPoint> {
 	 * @return The dimensionality of the point.
 	 */
 	public int dim() {return this.dim;}
+	
+	/**
+	 * Convert the point object to array.
+	 * @return An array of the coordinates of this N-dimensional point. 
+	 */
+	public Double[] toArray() {return this.coords;}
 	
 	/**
 	 * Set the coordinates of this point.
