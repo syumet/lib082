@@ -105,19 +105,19 @@ public class NDPointTest {
 	}
 
 	/**
-	 * Test method for {@link ds.NDPoint#compareByDim(int, ds.NDPoint)}.
+	 * Test method for {@link ds.NDPoint#compareTo(ds.NDPoint, int)}.
 	 */
 	@Test
 	public final void testCompareByDim() {
 		for (int i = 0; i < 3; i++) {
-			assertEquals(0, point321.compareByDim(i, point321));
+			assertEquals(0, point321.compareTo(point321, i));
 		}
-		assertEquals(1, point321.compareByDim(0, point123));
-		assertEquals(0, point321.compareByDim(1, point123));
-		assertEquals(-1, point321.compareByDim(2, point123));
+		assertEquals(1, point321.compareTo(point123, 0));
+		assertEquals(0, point321.compareTo(point123, 1));
+		assertEquals(-1, point321.compareTo(point123, 2));
 		
 		try {
-			point321.compareByDim(0, point5D0);
+			point321.compareTo(point5D0, 0);
 		} catch (Exception e) {
 			System.out.println("testCompareByDim: Exception catched");
 		}

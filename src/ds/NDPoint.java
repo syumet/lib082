@@ -137,7 +137,7 @@ public class NDPoint implements Comparable<NDPoint> {
 	
 	/**
 	 * Compares the i-th coordinate of two NDPoint objects.
-	 * @param i Index of the coordinate to compare.
+	 * @param di Index of the coordinate to compare.
 	 * @param other The point to which to compare this point.
 	 * @return -1 if the i-th coordinate of this point is smaller than that of 'other';
 	 *         0 if the i-th coordinate of this point and 'other' are equal; or
@@ -145,16 +145,16 @@ public class NDPoint implements Comparable<NDPoint> {
 	 * @throws IllegalArgumentException if i is not less than this point's dimensionality OR
 	 * this.dim() does not equal other.dim().
 	 */
-	public int compareByDim(int i, NDPoint other) {
+	public int compareTo(NDPoint other, int di) {
 		if (other.dim() != this.dim) {
 			throw new IllegalArgumentException(
 				"NDPoint: comparing two points of different dimension");
 		}
-		if (i >= this.dim) {
+		if (di >= this.dim) {
 			throw new IllegalArgumentException(
-				"NDPoint: comparing dimension: " + i + ", but point only has dimension " + this.dim);
+				"NDPoint: comparing dimension: " + di + ", but point only has dimension " + this.dim);
 		}
-		return coords[i].compareTo(other.coords[i]);
+		return coords[di].compareTo(other.coords[di]);
 	}
 
 	/**
