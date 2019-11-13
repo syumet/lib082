@@ -63,23 +63,39 @@ public class Sort {
 		double pivot = inVec[right].at(dim);
 		int swapOffset = left;
 		
-		NDPoint temp;
 		for (int i = left; i < right; i++) {
 			if (inVec[i].at(dim) <= pivot) {
-				temp = inVec[swapOffset];
-				inVec[swapOffset] = inVec[i];
-				inVec[i] = temp;
+				swap(inVec, i, swapOffset);
 				swapOffset++;
 			}
-		}		
-		temp = inVec[right];
-		inVec[right] = inVec[swapOffset];;
-		inVec[swapOffset] = temp;
+		}
+		swap(inVec, right, swapOffset);
 		return swapOffset;
 	}
 	
-	public static final <T extends Comparable<? super T>> void quickSelect(T[] inVec, int j) {
+	/**
+	 * Place the j-th smallest item at j-th entry of the input array after shuffling. 
+	 * @param inVec array in which shuffling is to take place
+	 * @param j we want to find the element that belongs at array index j 
+	 * @throws IllegalArgumentException if j is greater or equal to the size of input array 
+	 */
+	protected static final <T extends Comparable<? super T>> void jSmallest(T[] inVec, int j) {
+		if (j >= inVec.length) {
+			throw new IllegalArgumentException("Requested rank exceeds size of array.");
+		}
 		jSmallest(inVec, 0, inVec.length - 1, j);
+    }
+	
+	/**
+	 * Find the j-th smallest element in an unordered array. 
+	 * @param inVec input array
+	 * @param j we want to find the j-th smallest element 
+	 * @throws IllegalArgumentException if j is greater or equal to the size of input array 
+	 */
+	public static final <T extends Comparable<? super T>> T quickSelect(T[] inVec, int j) {
+		T[] tmp = inVec.clone();
+		Sort.jSmallest(tmp, j);
+		return tmp[j];
     }
 	
 	/**
@@ -157,9 +173,9 @@ public class Sort {
 		for (int i = start + 1; i <= end; i++) {
 			T curValue = inVec[i];
 			int j = i;
-			while (j > start && inVec[j-1].compareTo(curValue) > 0) {
-				inVec[j] = inVec[j-1];
-				j --;
+			while (j > start && inVec[j - 1].compareTo(curValue) > 0) {
+				inVec[j] = inVec[j - 1];
+				j--;
 			}
 			inVec[j] = curValue;
 		}
@@ -169,9 +185,9 @@ public class Sort {
 		for (int i = 1; i < inVec.size(); i++) {
 			T curValue = inVec.get(i);
 			int j = i;
-			while (j > 0 && inVec.get(j-1).compareTo(curValue) > 0) {
-				inVec.set(j, inVec.get(j-1));
-				j -= 1;
+			while (j > 0 && inVec.get(j - 1).compareTo(curValue) > 0) {
+				inVec.set(j, inVec.get(j - 1));
+				j--;
 			}
 			inVec.set(j, curValue);
 		}
@@ -180,46 +196,45 @@ public class Sort {
 	/**
 	 * The given array of strings would be in lexicographic order by MSD Radix Sort
 	 * @param S an array of strings to be sorted
-	 * @param R a HashMap to represent the radix 
 	 */
-	 public static final void radixSortMSD(String[] S, HashMap<Character, Integer> R) {
+	 public static final void radixSortMSD(String[] S) {
 		ArrayList<String> SList = new ArrayList<>(Arrays.asList(S));
-		sortByDigit(SList, R, 0);
+		sortByDigit(SList, 0);
 		for (int i = 0; i < S.length; i++)
 			S[i] = SList.get(i);
 	}
 
 	/**
 	 * Helper function for radixSortMSD
-	 * @param SList strings to be sorted
-	 * @param R a HashMap to represent the radix 
+	 * @param listOfString strings to be sorted
 	 * @param i digit on which to partition -- i = 0 is the left - most digit
 	 * @return a list of sorted strings in lexicographic
 	 */
-	private static final void sortByDigit(ArrayList<String> SList, HashMap<Character, Integer> R, int i) {
-		if (SList.size() < R.size()) {
-			Sort.insertionSort(SList);
+	private static final void sortByDigit(ArrayList<String> listOfString, int i) {
+		if (listOfString.size() < 26) {
+			Sort.insertionSort(listOfString);
 			return;
-		}	
+		}
+		// 96 slots represent ASCII code 32 (space) to 126 (~), with slot 0 reserved. 
 		@SuppressWarnings("unchecked")
-		ArrayList<String>[] L = new ArrayList[R.size() + 1];
-		for (int k = 0; k <= R.size(); k++)
+		ArrayList<String>[] L = new ArrayList[96];
+		for (int k = 0; k < 96; k++)
 			L[k] = new ArrayList<String>();
-		for (String s : SList) {
+		for (String s : listOfString) {
 			if (i >= s.length()) // if s has no character at i'th position
 				L[0].add(s);
 			else
-				L[R.get(s.charAt(i))].add(s);
+				L[s.charAt(i) - 31].add(s);
 		}
 		// reset the list, items in L[0] are identical (already sorted) 
-		SList.clear();
-		SList.addAll(L[0]);
-		for (int k = 1; k <= R.size(); k++) {
+		listOfString.clear();
+		listOfString.addAll(L[0]);
+		for (int k = 1; k < 96; k++) {
 			// if there is another digit to consider
 			if (L[k].size() > 1)
-				sortByDigit(L[k], R, i+1);
+				sortByDigit(L[k], i+1);
 			// append the sorted sub-list
-			SList.addAll(L[k]);
+			listOfString.addAll(L[k]);
 		}
 	}
 	
