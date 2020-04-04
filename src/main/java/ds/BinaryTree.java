@@ -138,7 +138,7 @@ public class BinaryTree<E> extends AbstractCollection<E> implements Tree<E> {
 	/**
 	 * @see LeetCode Problem #100
 	 */
-    public Boolean equals(BinaryTree<E> t) {
+    public final boolean equals(BinaryTree<E> t) {
     	
     	if (t == null || t.val != this.val) 
     		return false;
@@ -152,7 +152,7 @@ public class BinaryTree<E> extends AbstractCollection<E> implements Tree<E> {
 		
 		if (this.right != null)
 			req = this.right.equals(t.right);
-		else if (t.left != null)
+		else if (t.right != null)
 			return false;
     	
     	return leq && req;

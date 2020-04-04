@@ -72,7 +72,7 @@ public class BinaryTreeTest {
   }
 
   /**
-   * Test method for {@link BinaryTree#BinaryTree(E[])}.
+   * Test method for {@link BinaryTree#BinaryTree(Object[])}.
    */
   @Test
   public void testBinaryTreeEArray() {
@@ -138,11 +138,19 @@ public class BinaryTreeTest {
   }
 
   /**
-   * Test method for {@link BinaryTree#equals()}.
+   * Test method for {@link BinaryTree#equals(BinaryTree)} ()}.
    */
   @Test
   public void testEquals() {
-    fail(); // TODO
+    Integer[] nums = {10, 20, 30, 40};
+    BinaryTree<Integer> t1 = new BinaryTree<Integer>(nums);
+    BinaryTree<Integer> t2 = new BinaryTree<Integer>(nums);
+    BinaryTree<Integer> t3 = new BinaryTree<Integer>();
+    assertTrue(t1.equals(t2));
+    assertFalse(t1.equals(t3));
+    nums[0] = 0;
+    t3 = new BinaryTree<Integer>(nums);
+    assertFalse(t1.equals(t3));
   }
 
 }
