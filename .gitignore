@@ -1,3 +1,8 @@
-/bin/
+target/
+*.class
 *.jar
-/Knapsack-Template/
+*.war
+*.ear
+*.logs
+*.iml
+.idea/
