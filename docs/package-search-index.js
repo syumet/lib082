@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"algo"},{"l":"algo.ksp"},{"l":"All Packages","url":"allpackages-index.html"},{"l":"ds"}]
+packageSearchIndex = [{"l":"akka.fib"},{"l":"akka.sorter"},{"l":"algo"},{"l":"algo.im"},{"l":"algo.ksp"},{"l":"All Packages","url":"allpackages-index.html"},{"l":"ds"}]

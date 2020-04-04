@@ -2,4 +2,6 @@ language: java
 jdk:
   - oraclejdk11
 
-script: ant build
+sudo: false
+
+script: mvn test
