@@ -1,6 +1,6 @@
 package ds;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -17,35 +17,23 @@ public class NDPointTest {
   NDPoint point123;
   NDPoint point321;
 
-  /**
-   * @throws Exception
-   */
   @BeforeClass
-  public static void setUpBeforeClass() throws Exception {
+  public static void setUpBeforeClass() {
   }
 
-  /**
-   * @throws Exception
-   */
   @AfterClass
-  public static void tearDownAfterClass() throws Exception {
+  public static void tearDownAfterClass() {
     System.out.println("\nUnit test completed.");
   }
 
-  /**
-   * @throws Exception
-   */
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     point123 = new NDPoint(arr123);
     point321 = new NDPoint(arr321);
   }
 
-  /**
-   * @throws Exception
-   */
   @After
-  public void tearDown() throws Exception {
+  public void tearDown() {
   }
 
   /**
@@ -69,11 +57,11 @@ public class NDPointTest {
    */
   @Test
   public final void testSetPoint() {
-    assertEquals(3, (int)point321.at(0));
-    assertEquals(2, (int)point321.at(1));
-    assertEquals(1, (int)point321.at(2));
+    assertEquals(3, (int) point321.at(0));
+    assertEquals(2, (int) point321.at(1));
+    assertEquals(1, (int) point321.at(2));
 
-    Double empty[] = {};
+    Double[] empty = {};
     try {
       point321.setPoint(empty);
     } catch (IllegalArgumentException e) {
@@ -82,10 +70,10 @@ public class NDPointTest {
       assertEquals(3, point321.dim());
     }
 
-    Double arr2d[] = {30.0, 20.0};
+    Double[] arr2d = {30.0, 20.0};
     point123.setPoint(arr2d);
-    assertEquals(30, (int)point123.at(0));
-    assertEquals(20, (int)point123.at(1));
+    assertEquals(30, (int) point123.at(0));
+    assertEquals(20, (int) point123.at(1));
     try {
       point123.at(2);
     } catch (IllegalArgumentException e) {
@@ -100,8 +88,8 @@ public class NDPointTest {
    */
   @Test
   public final void testToString() {
-    assertTrue(point5D0.toString().equals("(0.0, 0.0, 0.0, 0.0, 0.0)"));
-    assertTrue(point321.toString().equals("(3.0, 2.0, 1.0)"));
+    assertEquals("(0.0, 0.0, 0.0, 0.0, 0.0)", point5D0.toString());
+    assertEquals("(3.0, 2.0, 1.0)", point321.toString());
   }
 
   /**
@@ -129,12 +117,11 @@ public class NDPointTest {
   @Test
   public final void testCompareTo() {
     // test compareTo() when the first coordinate is different
-    assertEquals(0, point321.compareTo(point321));
     assertEquals(1, point321.compareTo(point123));
     assertEquals(-1, point123.compareTo(point321));
 
     // test compareTo() when the third coordinate is different
-    Double arr329[] = {3.0, 2.0, 9.0};
+    Double[] arr329 = {3.0, 2.0, 9.0};
     NDPoint point329 = new NDPoint(arr329);
     assertEquals(-1, point321.compareTo(point329));
     assertEquals(1, point329.compareTo(point321));
