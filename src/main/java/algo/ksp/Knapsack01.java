@@ -6,6 +6,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 import java.util.Scanner;
+import org.apache.log4j.BasicConfigurator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A non-public class that defines a Knapsack item.
@@ -147,47 +150,42 @@ class KnapsackInstance {
 
 public class Knapsack01 {
 
-  public static KnapsackInstance readKnapsackInstance(String filename) {
+  private static Logger logger = LoggerFactory.getLogger(Knapsack01.class);
 
-    Scanner infile = null;
-    try {
-      infile = new Scanner(new File(filename));
-    } catch (FileNotFoundException e) {
-      System.out.println("Error: " + filename + " could not be opened.");
-    }
+  public static KnapsackInstance readKnapsackInstance(String filename)
+      throws FileNotFoundException {
 
-    // Try to read the knapsack capacity and the number of items.
-    if (!infile.hasNextDouble()) {
-      throw new RuntimeException("Error: expected knapsack weight as a real number");
-    }
-    Double W = infile.nextDouble();
-
-    if (!infile.hasNextInt()) {
-      throw new RuntimeException("Error: expected integer number of items.");
-    }
-    int numItems = infile.nextInt();
-
-    // Create a knapsack instance for the given number of items.
-    KnapsackInstance K = new KnapsackInstance(numItems, W);
-
-    // Read each value-weight pair.
-    for (int i = 0; i < numItems; i++) {
+    try (Scanner infile = new Scanner(new File(filename))) {
+      // Try to read the knapsack capacity and the number of items.
       if (!infile.hasNextDouble()) {
-        throw new RuntimeException("Error: expected a value while reading item " + i + ".");
+        throw new RuntimeException("Error: expected knapsack weight as a real number");
       }
-      Double v = infile.nextDouble();
-      if (!infile.hasNextDouble()) {
-        throw new RuntimeException("Error: expected a weight while reading item " + i + ".");
-      }
-      Double w = infile.nextDouble();
+      Double W = infile.nextDouble();
 
-      // Store the value-weight pair in the problem instance.
-      K.setItem(v, w, i);
+      if (!infile.hasNextInt()) {
+        throw new RuntimeException("Error: expected integer number of items.");
+      }
+      int numItems = infile.nextInt();
+
+      // Create a knapsack instance for the given number of items.
+      KnapsackInstance K = new KnapsackInstance(numItems, W);
+
+      // Read each value-weight pair.
+      for (int i = 0; i < numItems; i++) {
+        if (!infile.hasNextDouble()) {
+          throw new RuntimeException("Error: expected a value while reading item " + i + ".");
+        }
+        Double v = infile.nextDouble();
+        if (!infile.hasNextDouble()) {
+          throw new RuntimeException("Error: expected a weight while reading item " + i + ".");
+        }
+        Double w = infile.nextDouble();
+
+        // Store the value-weight pair in the problem instance.
+        K.setItem(v, w, i);
+      }
+      return K;
     }
-
-    infile.close();
-
-    return K;
   }
 
   /**
@@ -312,21 +310,21 @@ public class Knapsack01 {
   }
 
   public static void main(String[] args) {
-    KnapsackInstance K = readKnapsackInstance("data/Knapsack-Template/knapsack-1000.dat");
-    KnapsackInstance K2 = new KnapsackInstance(3, 5.0);
-    K2.setItem(10.0, 1.0, 0);
-    K2.setItem(15.0, 2.0, 1);
-    K2.setItem(20.0, 3.0, 2);
+    BasicConfigurator.configure();
+    try {
+      KnapsackInstance K = readKnapsackInstance("data/Knapsack-Template/knapsack-1000.dat");
 
-//		System.out.println(K);
+      long startTime = System.currentTimeMillis();
+      logger.info("Best solution found by backtrack:" + backTrackingSol(K));
+      long endTime = System.currentTimeMillis();
+      logger.info("Took " + (endTime - startTime) + " ms");
 
-    // Solve the knapsack instance K here.
-    long startTime = System.currentTimeMillis();
-
-    System.out.println(backTrackingSol(K));
-//		System.out.println(greedySol(K));
-
-    long endTime = System.currentTimeMillis();
-    System.out.println("Took " + (endTime - startTime) + " ms");
+      startTime = System.currentTimeMillis();
+      logger.info("Best solution found by greedy:" + greedySol(K));
+      endTime = System.currentTimeMillis();
+      logger.info("Took " + (endTime - startTime) + " ms");
+    } catch (FileNotFoundException e) {
+      logger.error("File not found");
+    }
   }
 }
