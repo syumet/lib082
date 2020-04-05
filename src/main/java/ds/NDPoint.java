@@ -1,12 +1,14 @@
 package ds;
 
+import java.util.Arrays;
+
 /**
  * N-Dimensional Point
  */
 public class NDPoint implements Comparable<NDPoint> {
 
-  private Double[] coords;
-  private int dim;
+  private final double[] coords;
+  private final int dim;
 
   /**
    * Create a new N-dimensional point at the origin (0,0,..., 0).
@@ -18,10 +20,7 @@ public class NDPoint implements Comparable<NDPoint> {
       throw new IllegalArgumentException("NDPoint: dimension of point must be at least 1.");
     }
     this.dim = dim;
-    coords = new Double[dim];
-    for (int i = 0; i < dim; i++) {
-      coords[i] = 0.0;
-    }
+    coords = new double[dim];
   }
 
   /**
@@ -31,12 +30,11 @@ public class NDPoint implements Comparable<NDPoint> {
    * @param pt Coordinates of the new point.
    */
   public NDPoint(Double[] pt) {
-    this.dim = pt.length;
-    if (this.dim < 1) {
+    if (pt.length < 1) {
       throw new IllegalArgumentException("NDPoint: dimension of point must be at least 1.");
     }
-    coords = pt;
-    this.copyArray(pt);
+    this.dim = pt.length;
+    coords = Arrays.stream(pt).mapToDouble(x -> x).toArray();
   }
 
   /**
@@ -46,50 +44,46 @@ public class NDPoint implements Comparable<NDPoint> {
    * @param pt Coordinates of the new point.
    */
   public NDPoint(double[] pt) {
-    this.dim = pt.length;
-    if (this.dim < 1) {
+    if (pt.length < 1) {
       throw new IllegalArgumentException("NDPoint: dimension of point must be at least 1.");
     }
-    coords = new Double[this.dim];
-    this.copyArray(pt);
+    this.dim = pt.length;
+    coords = pt;
   }
 
-  public static void main(String[] args) {
-  }
+//  /**
+//   * Use the coordinates in the given array for this point.
+//   *
+//   * @param pt New coordinates for this point.
+//   * @throws IllegalArgumentException if the length of pt is not equal to the dimensionality of this
+//   *                                  N-dimensional point.
+//   */
+//  private void copyArray(Double[] pt) {
+//    if (this.dim() != pt.length) {
+//      throw new IllegalArgumentException(
+//          "Array length must equal point dimensionality (" + this.dim + ")");
+//    }
+//    for (int i = 0; i < this.dim; i++) {
+//      coords[i] = pt[i];
+//    }
+//  }
 
-  /**
-   * Use the coordinates in the given array for this point.
-   *
-   * @param pt New coordinates for this point.
-   * @throws IllegalArgumentException if the length of pt is not equal to the dimensionality of this
-   *                                  N-dimensional point.
-   */
-  private void copyArray(Double[] pt) {
-    if (this.dim() != pt.length) {
-      throw new IllegalArgumentException(
-          "Array length must equal point dimensionality (" + this.dim + ")");
-    }
-    for (int i = 0; i < this.dim; i++) {
-      coords[i] = pt[i];
-    }
-  }
-
-  /**
-   * Use the coordinates in the given array for this point.
-   *
-   * @param pt New coordinates for this point.
-   * @throws IllegalArgumentException if the length of pt is not equal to the dimensionality of this
-   *                                  N-dimensional point.
-   */
-  private void copyArray(double[] pt) {
-    if (this.dim() != pt.length) {
-      throw new IllegalArgumentException(
-          "Array length must equal point dimensionality (" + this.dim + ")");
-    }
-    for (int i = 0; i < this.dim; i++) {
-      coords[i] = pt[i];
-    }
-  }
+//  /**
+//   * Use the coordinates in the given array for this point.
+//   *
+//   * @param pt New coordinates for this point.
+//   * @throws IllegalArgumentException if the length of pt is not equal to the dimensionality of this
+//   *                                  N-dimensional point.
+//   */
+//  private void copyArray(double[] pt) {
+//    if (this.dim() != pt.length) {
+//      throw new IllegalArgumentException(
+//          "Array length must equal point dimensionality (" + this.dim + ")");
+//    }
+//    for (int i = 0; i < this.dim; i++) {
+//      coords[i] = pt[i];
+//    }
+//  }
 
   /**
    * Get the dimensionality of the point.
@@ -105,7 +99,7 @@ public class NDPoint implements Comparable<NDPoint> {
    *
    * @return An array of the coordinates of this N-dimensional point.
    */
-  public Double[] toArray() {
+  public double[] toArray() {
     return this.coords;
   }
 
@@ -174,7 +168,7 @@ public class NDPoint implements Comparable<NDPoint> {
       throw new IllegalArgumentException(
           "NDPoint: comparing dimension: " + di + ", but point only has dimension " + this.dim);
     }
-    return coords[di].compareTo(other.coords[di]);
+    return Double.compare(coords[di], other.coords[di]);
   }
 
   /**
@@ -188,8 +182,9 @@ public class NDPoint implements Comparable<NDPoint> {
       throw new IllegalArgumentException("NDPoint: comparing two points of different dimension");
     }
     for (int i = 0; i < this.dim; i++) {
-      if (this.coords[i].compareTo(y.coords[i]) != 0) {
-        return this.coords[i].compareTo(y.coords[i]);
+      int result = Double.compare(this.coords[i], y.coords[i]);
+      if (result != 0) {
+        return result;
       }
     }
     return 0;
