@@ -52,36 +52,36 @@ public class NDPointTest {
     }
   }
 
-  /**
-   * Test method for {@link NDPoint#setPoint(Double[])}.
-   */
-  @Test
-  public final void testSetPoint() {
-    assertEquals(3, (int) point321.at(0));
-    assertEquals(2, (int) point321.at(1));
-    assertEquals(1, (int) point321.at(2));
-
-    Double[] empty = {};
-    try {
-      point321.setPoint(empty);
-    } catch (IllegalArgumentException e) {
-      System.out.println("testSetPoint: Exception1 catched");
-    } finally {
-      assertEquals(3, point321.dim());
-    }
-
-    Double[] arr2d = {30.0, 20.0};
-    point123.setPoint(arr2d);
-    assertEquals(30, (int) point123.at(0));
-    assertEquals(20, (int) point123.at(1));
-    try {
-      point123.at(2);
-    } catch (IllegalArgumentException e) {
-      System.out.println("testSetPoint: Exception2 catched");
-    } finally {
-      assertEquals(2, point123.dim());
-    }
-  }
+//  /**
+//   * Test method for {@link NDPoint#setPoint(Double[])}.
+//   */
+//  @Test
+//  public final void testSetPoint() {
+//    assertEquals(3, (int) point321.at(0));
+//    assertEquals(2, (int) point321.at(1));
+//    assertEquals(1, (int) point321.at(2));
+//
+//    Double[] empty = {};
+//    try {
+//      point321.setPoint(empty);
+//    } catch (IllegalArgumentException e) {
+//      System.out.println("testSetPoint: Exception1 catched");
+//    } finally {
+//      assertEquals(3, point321.dim());
+//    }
+//
+//    Double[] arr2d = {30.0, 20.0};
+//    point123.setPoint(arr2d);
+//    assertEquals(30, (int) point123.at(0));
+//    assertEquals(20, (int) point123.at(1));
+//    try {
+//      point123.at(2);
+//    } catch (IllegalArgumentException e) {
+//      System.out.println("testSetPoint: Exception2 catched");
+//    } finally {
+//      assertEquals(2, point123.dim());
+//    }
+//  }
 
   /**
    * Test method for {@link NDPoint#toString()}.
