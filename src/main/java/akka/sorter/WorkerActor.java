@@ -1,13 +1,12 @@
 package akka.sorter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class WorkerActor extends AbstractActor {
 
@@ -37,6 +36,7 @@ public class WorkerActor extends AbstractActor {
     /**
      * Occurs on startup, before we are sent a message.
      */
+    @Override
     public void preStart() {
         //log.info("Fibonacci number worker actor ID {} created!", workerId);
     }
@@ -45,6 +45,7 @@ public class WorkerActor extends AbstractActor {
     /** 
      * Matches the received message to the corresponding method.
      */
+    @Override
     public Receive createReceive() {
         return receiveBuilder()
         .match(MasterMessage.CurrentJob.class, msg -> {

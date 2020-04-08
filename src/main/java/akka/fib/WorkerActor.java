@@ -32,6 +32,7 @@ public class WorkerActor extends AbstractActor {
     /**
      * Occurs on startup, before we are sent a message.
      */
+    @Override
     public void preStart() {
         //log.info("Fibonacci number worker actor ID {} created!", workerId);
     }
@@ -40,6 +41,7 @@ public class WorkerActor extends AbstractActor {
     /** 
      * Matches the received message to the corresponding method.
      */
+    @Override
     public Receive createReceive() {
         return receiveBuilder()
         .match(CurrentJob.class, msg -> {

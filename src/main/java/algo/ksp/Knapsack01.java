@@ -133,6 +133,7 @@ class KnapsackInstance {
   /**
    * Printable representation of the problem instance.
    */
+  @Override
   public String toString() {
     StringBuilder result = new StringBuilder();
 

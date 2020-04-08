@@ -28,15 +28,16 @@ public class MasterActor extends AbstractActor {
     /**
      * Matches the received message to the corresponding method.
      */
-	public Receive createReceive() {
-        return receiveBuilder()
-            .match(MasterMessage.Start.class, msg -> {
-            	this.receiveStart(msg);
-            })
-            .match(WorkerMessage.Found.class, msg -> {
-            	this.fibFound(msg);
-            })
-            .build();
+    @Override
+    public Receive createReceive() {
+      return receiveBuilder()
+          .match(MasterMessage.Start.class, msg -> {
+            this.receiveStart(msg);
+          })
+          .match(WorkerMessage.Found.class, msg -> {
+            this.fibFound(msg);
+          })
+          .build();
     }
     
     /**

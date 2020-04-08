@@ -1,12 +1,11 @@
 package akka.sorter;
 
-import java.util.ArrayList;
-
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
+import java.util.ArrayList;
 
 public class MasterActor extends AbstractActor {
 
@@ -28,19 +27,20 @@ public class MasterActor extends AbstractActor {
         return Props.create(MasterActor.class, () -> new MasterActor(l));
     }
 
-    /**
-     * Matches the received message to the corresponding method.
-     */
-	public Receive createReceive() {
-        return receiveBuilder()
-            .match(MasterMessage.Start.class, msg -> {
-            	this.receiveStart(msg);
-            })
-            .match(WorkerMessage.Finish.class, msg -> {
-            	this.fibFound(msg);
-            })
-            .build();
-    }
+  /**
+   * Matches the received message to the corresponding method.
+   */
+  @Override
+  public Receive createReceive() {
+    return receiveBuilder()
+        .match(MasterMessage.Start.class, msg -> {
+          this.receiveStart(msg);
+        })
+        .match(WorkerMessage.Finish.class, msg -> {
+          this.fibFound(msg);
+        })
+        .build();
+  }
     
     /**
      * Begins the worker actors if given the message to start.
